@@ -1,0 +1,32 @@
+# Ignore Unity cache and build folders inside 'Box Head AI'
+Box Head AI/Library/
+Box Head AI/Temp/
+Box Head AI/Obj/
+Box Head AI/Build/
+Box Head AI/Logs/
+Box Head AI/Builds/
+
+# Ignore Unity generated files
+Box Head AI/*.csproj
+Box Head AI/*.sln
+Box Head AI/*.user
+Box Head AI/*.pidb
+Box Head AI/*.booproj
+Box Head AI/*.svd
+Box Head AI/*.userprefs
+Box Head AI/*.unityproj
+
+# Ignore Unity package cache (could be big)
+Box Head AI/Packages/com.unity.burst@*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Visual Studio / Rider / VS Code files
+.vscode/
+.idea/
+*.code-workspace
+
+# Other common ignores
+*.log
