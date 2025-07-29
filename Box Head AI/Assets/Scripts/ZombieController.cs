@@ -1,49 +1,47 @@
-using Unity.VisualScripting.Antlr3.Runtime;
-using UnityEditor.Callbacks;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class ZoombieController : MonoBehaviour
 {
     public float moveSpeed = 2f;
-    private Rigidbody2D rb;
+    private Rigidbody rb;
+
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
     {
         Transform closestTarget = GetClosestPlayer();
-        if (closestTarget == null) return;
+        if (closestTarget == null)
+        {
+            Debug.LogWarning("No player found!");
+            return;
+        }
 
-        Vector2 direction = ((Vector2)closestTarget.position - rb.position).normalized;
-        Debug.Log(direction);
-        Vector2 newPos = rb.position + direction * moveSpeed * Time.fixedDeltaTime;
+        Vector3 direction = (closestTarget.position - rb.position).normalized;
+        Vector3 newPos = rb.position + direction * moveSpeed * Time.fixedDeltaTime;
         rb.MovePosition(newPos);
     }
 
     Transform GetClosestPlayer()
     {
-
         GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
         if (players.Length == 0) return null;
 
-        Transform player = players[0].transform;
-
-        float minDist = Vector2.Distance(transform.position, player.position);
+        Transform closest = players[0].transform;
+        float minDist = Vector3.Distance(transform.position, closest.position);
 
         foreach (GameObject p in players)
         {
-            float dist = Vector2.Distance(transform.position,
-                p.transform.position);
-            if (minDist > dist)
+            float dist = Vector3.Distance(transform.position, p.transform.position);
+            if (dist < minDist)
             {
-                minDist = dist; ;
-                player = p.transform;
+                minDist = dist;
+                closest = p.transform;
             }
         }
 
-        return player;
+        return closest;
     }
 }
