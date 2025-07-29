@@ -15,9 +15,10 @@ public class ZombieSpawner : MonoBehaviour
             Vector2 randomPos2D = Random.insideUnitCircle * spawnRadius;
             Vector3 spawnPos = new Vector3(
                 transform.position.x + randomPos2D.x,
-                transform.position.y,
+                transform.position.y, 
                 transform.position.z + randomPos2D.y
             );
+
 
             GameObject zombie = Instantiate(zombiePrefab, spawnPos, Quaternion.identity);
 
