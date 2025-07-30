@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    private Transform player;           // Player to follow
-    public Vector3 offset = new Vector3(0, 15, -10);  // Camera offset
+    private Transform player;  
+    public Vector3 offset = new Vector3(0, 15, -10); 
     void Start()
     {
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
