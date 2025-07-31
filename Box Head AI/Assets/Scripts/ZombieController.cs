@@ -3,59 +3,40 @@ using UnityEngine;
 public class ZoombieController : MonoBehaviour
 {
     public float moveSpeed = 2f;
+    public LayerMask wallLayerMask;
     private readonly float rotationSpeed = 2f;
     public float knockbackResistance = 1f;
     private Rigidbody rb;
+    private ZombieAI ai;
+    private Vector3 currentDirection;
+    private Animator animator;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+        ai = GetComponent<ZombieAI>();
+        currentDirection = transform.forward;
     }
 
     void FixedUpdate()
     {
+        Vector3 moveDir = ai.MoveDirection;
 
-        Transform closestTarget = GetClosestPlayer();
-        if (closestTarget == null)
+        if (moveDir != Vector3.zero)
         {
-            Debug.LogWarning("No player found!");
-            return;
-        }
+            Vector3 newPos = rb.position + moveDir * moveSpeed * Time.fixedDeltaTime;
+            rb.MovePosition(newPos);
 
-        Vector3 direction = (closestTarget.position - rb.position).normalized;
-        Vector3 newPos = rb.position + direction * moveSpeed * Time.fixedDeltaTime;
-        rb.MovePosition(newPos);
-
-        if (direction != Vector3.zero)
-        {
-            Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+            Quaternion toRotation = Quaternion.LookRotation(moveDir, Vector3.up);
             transform.rotation = Quaternion.Slerp(transform.rotation, toRotation, rotationSpeed * Time.fixedDeltaTime);
         }
+
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
+        animator.SetFloat("Speed", moveDir.magnitude);
     }
-
-    Transform GetClosestPlayer()
-    {
-        GameObject[] players = GameObject.FindGameObjectsWithTag("Player");
-        if (players.Length == 0) return null;
-
-        Transform closest = players[0].transform;
-        float minDist = Vector3.Distance(transform.position, closest.position);
-
-        foreach (GameObject p in players)
-        {
-            float dist = Vector3.Distance(transform.position, p.transform.position);
-            if (dist < minDist)
-            {
-                minDist = dist;
-                closest = p.transform;
-            }
-        }
-
-        return closest;
-    }
-
     public void Knockback(Vector3 direction, float force)
     {
         if (rb)
